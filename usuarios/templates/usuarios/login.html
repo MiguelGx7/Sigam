@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Iniciar sesión - SIGAM</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #ffffff;
+            color: #263238;
+        }
+
+        .contenedor {
+            width: 100%;
+            max-width: 430px;
+            margin: 60px auto;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .logo {
+            width: 95px;
+            height: 95px;
+            margin: 0 auto 25px;
+
+            border-radius: 50%;
+            background: #ff7518;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: white;
+            font-size: 23px;
+            font-weight: bold;
+        }
+
+        h1 {
+            margin-bottom: 12px;
+            font-size: 28px;
+        }
+
+        .descripcion {
+            color: #777;
+            margin-bottom: 30px;
+        }
+
+        form {
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            height: 48px;
+
+            padding: 0 15px;
+
+            border: 1px solid #ff7518;
+            border-radius: 10px;
+
+            font-size: 16px;
+            outline: none;
+
+            margin-bottom: 20px;
+        }
+
+        input:focus {
+            border: 2px solid #ff7518;
+        }
+
+        button {
+            width: 100%;
+            height: 48px;
+
+            border: none;
+            border-radius: 25px;
+
+            background: #ff7518;
+            color: white;
+
+            font-size: 16px;
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .error {
+            color: red;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .recuperar {
+            margin-top: 25px;
+        }
+
+        .recuperar a {
+            color: #ff7518;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+    <div class="logo">
+        SIGAM
+    </div>
+
+    <h1>Iniciar sesión</h1>
+
+    <p class="descripcion">
+        Ingresa tus datos para acceder a SIGAM.
+    </p>
+
+    {% if error %}
+        <div class="error">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    <form method="POST">
+
+        {% csrf_token %}
+
+        <label for="username">
+            Usuario
+        </label>
+
+        <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="Ingresa tu usuario"
+            required
+        >
+
+        <label for="password">
+            Contraseña
+        </label>
+
+        <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="Ingresa tu contraseña"
+            required
+        >
+
+        <button type="submit">
+            Iniciar sesión
+        </button>
+
+    </form>
+
+    <div class="recuperar">
+        <a href="{% url 'password_reset' %}">
+            ¿Olvidaste tu contraseña?
+        </a>
+    </div>
+
+
+</div>
+
+</body>
+</html>

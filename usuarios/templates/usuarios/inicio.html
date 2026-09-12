@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SIGAM - Inicio</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f7f7f7;
+            color: #263238;
+        }
+
+        .app {
+            max-width: 500px;
+            min-height: 100vh;
+            margin: auto;
+            background: #ffffff;
+            padding-bottom: 90px;
+        }
+
+        /* ENCABEZADO */
+
+        .encabezado {
+            background: #ff6b00;
+            color: white;
+            padding: 28px 22px 35px;
+            border-radius: 0 0 28px 28px;
+        }
+
+        .fila-superior {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: white;
+            color: #ff6b00;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .usuario {
+            text-align: right;
+        }
+
+        .usuario small {
+            display: block;
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 4px;
+        }
+
+        .usuario strong {
+            font-size: 17px;
+        }
+
+        .saludo {
+            margin-top: 28px;
+        }
+
+        .saludo p {
+            margin: 0 0 7px;
+            font-size: 15px;
+            color: white;
+        }
+
+        .saludo h1 {
+            margin: 0;
+            font-size: 27px;
+        }
+
+        /* CONTENIDO */
+
+        .contenido {
+            padding: 24px 20px;
+        }
+
+        .titulo {
+            font-size: 21px;
+            margin: 0 0 18px;
+        }
+
+        /* TARJETAS */
+
+        .tarjetas {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .tarjeta {
+            background: white;
+            border: 1px solid #eeeeee;
+            border-radius: 18px;
+            padding: 20px 15px;
+
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+
+            text-decoration: none;
+            color: #263238;
+        }
+
+        .icono {
+            width: 48px;
+            height: 48px;
+
+            background: #fff1e8;
+            color: #ff6b00;
+
+            border-radius: 14px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 23px;
+            margin-bottom: 13px;
+        }
+
+        .tarjeta h3 {
+            margin: 0 0 6px;
+            font-size: 16px;
+        }
+
+        .tarjeta p {
+            margin: 0;
+            color: #777;
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        /* ACTIVIDAD */
+
+        .seccion {
+            margin-top: 28px;
+        }
+
+        .seccion-titulo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .seccion-titulo h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        .ver-todo {
+            color: #ff6b00;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .actividad {
+            border: 1px solid #eeeeee;
+            border-radius: 18px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .actividad-icono {
+            width: 45px;
+            height: 45px;
+            min-width: 45px;
+
+            border-radius: 50%;
+            background: #fff1e8;
+            color: #ff6b00;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 20px;
+        }
+
+        .actividad-texto {
+            flex: 1;
+        }
+
+        .actividad-texto strong {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .actividad-texto span {
+            color: #888;
+            font-size: 12px;
+        }
+
+        /* BARRA INFERIOR */
+
+        .navegacion {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+
+            width: 100%;
+            max-width: 500px;
+
+            height: 75px;
+            background: white;
+
+            border-top: 1px solid #eeeeee;
+
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+
+            box-shadow: 0 -3px 15px rgba(0,0,0,0.07);
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: #888;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+
+            font-size: 11px;
+        }
+
+        .nav-item span {
+            font-size: 22px;
+        }
+
+        .nav-item.activo {
+            color: #ff6b00;
+            font-weight: bold;
+        }
+
+        /* RESPONSIVE */
+
+        @media (min-width: 501px) {
+            body {
+                background: #eeeeee;
+            }
+
+            .app {
+                box-shadow: 0 0 25px rgba(0,0,0,0.08);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="app">
+
+    <!-- ENCABEZADO -->
+    <header class="encabezado">
+
+        <div class="fila-superior">
+
+            <div class="logo">
+                SIGAM
+            </div>
+
+            <div class="usuario">
+                <small>Usuario</small>
+                <strong>{{ user.username }}</strong>
+            </div>
+
+        </div>
+
+        <div class="saludo">
+            <p>Bienvenido de nuevo</p>
+            <h1>Panel principal</h1>
+        </div>
+
+    </header>
+
+
+    <!-- CONTENIDO -->
+    <main class="contenido">
+
+        <h2 class="titulo">Accesos rápidos</h2>
+
+        <div class="tarjetas">
+
+            <a href="#" class="tarjeta">
+                <div class="icono">🚑</div>
+                <h3>Ambulancias</h3>
+                <p>Gestionar ambulancias y recursos.</p>
+            </a>
+
+            <a href="#" class="tarjeta">
+                <div class="icono">👨‍⚕️</div>
+                <h3>Conductores</h3>
+                <p>Consultar y administrar conductores.</p>
+            </a>
+
+            <a href="#" class="tarjeta">
+                <div class="icono">📅</div>
+                <h3>Turnos</h3>
+                <p>Consultar y organizar turnos.</p>
+            </a>
+
+            <a href="#" class="tarjeta">
+                <div class="icono">🚨</div>
+                <h3>Servicios</h3>
+                <p>Consultar servicios realizados.</p>
+            </a>
+
+        </div>
+
+
+        <!-- ACTIVIDAD -->
+        <section class="seccion">
+
+            <div class="seccion-titulo">
+                <h2>Actividad reciente</h2>
+                <a href="#" class="ver-todo">Ver todo</a>
+            </div>
+
+            <div class="actividad">
+
+                <div class="actividad-icono">
+                    ✓
+                </div>
+
+                <div class="actividad-texto">
+                    <strong>Sesión iniciada correctamente</strong>
+                    <span>Bienvenido al sistema SIGAM</span>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- NAVEGACIÓN -->
+    <nav class="navegacion">
+
+        <a href="/inicio/" class="nav-item activo">
+            <span>⌂</span>
+            Inicio
+        </a>
+
+        <a href="#" class="nav-item">
+            <span></span>
+            Servicios
+        </a>
+
+        <a href="#" class="nav-item">
+            <span></span>
+            Reportes
+        </a>
+
+        <a href="#" class="nav-item">
+            <span></span>
+            Perfil
+        </a>
+
+    </nav>
+
+</div>
+
+</body>
+</html>
