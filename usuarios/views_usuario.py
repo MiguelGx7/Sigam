@@ -1,9 +1,20 @@
-﻿from rest_framework.views import APIView
+﻿from django.shortcuts import render
+
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
 from .models import Usuario
 from .serializers import UsuarioSerializer
+
+
+def lista_usuarios(request):
+    usuarios = Usuario.objects.all()
+    return render(
+        request,
+        'usuarios/usuario_list.html',
+        {'usuarios': usuarios}
+    )
 
 
 class LeerUsuarios(APIView):
