@@ -3,8 +3,8 @@ from django.contrib.auth import views as auth_views
 
 from usuarios.views_login import login_usuario, inicio, logout_usuario
 from usuarios.views_roles import roles_edit, roles_delete
-from usuarios.views_usuario import CrearUsuario, LeerUsuarios, lista_usuarios 
-from usuarios.views_crud import CrearUsuario as CrearUsuarioCRUD, LeerUsuarios as LeerUsuariosCRUD
+from usuarios.views_usuario import CrearUsuario, LeerUsuarios, lista_usuarios, detalle_usuario
+
 
 urlpatterns = [
     path('login/', login_usuario, name='login'),
@@ -18,9 +18,6 @@ urlpatterns = [
     path('usuarios/', LeerUsuarios.as_view(), name='usuarios_listar'),
     path('usuarios/lista/', lista_usuarios, name='usuarios_lista'),
     path('usuarios/crear/', CrearUsuario.as_view(), name='usuarios_crear'),
-    path('usuarios/editar/<int:id>/', CrearUsuario.as_view(), name='usuarios_editar'),
-    path('usuarios/eliminar/<int:id>/', CrearUsuario.as_view(), name='usuarios_eliminar'),
-    path('crud/usuarios/', LeerUsuariosCRUD.as_view(), name='crud_usuarios_listar'),
-    path('crud/usuarios/crear/', CrearUsuarioCRUD.as_view(), name='crud_usuarios_crear'),
+    path('usuarios/detalle/<int:id>/', detalle_usuario, name='usuarios_detalle'),
     
 ]

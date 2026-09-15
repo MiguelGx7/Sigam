@@ -16,6 +16,14 @@ def lista_usuarios(request):
         {'usuarios': usuarios}
     )
 
+def detalle_usuario(request, id):
+    usuario = Usuario.objects.get(id=id)
+    return render(
+        request,
+        'usuarios/usuario_detail.html',
+        {'usuario': usuario}
+    )
+
 
 class LeerUsuarios(APIView):
 
