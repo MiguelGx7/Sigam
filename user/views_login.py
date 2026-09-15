@@ -23,7 +23,7 @@ def login_usuario(request):
 
         return render(
             request,
-            "usuarios/login.html",
+            "user/login.html",
             {
                 "error": "Usuario o contraseña incorrectos."
             }
@@ -31,7 +31,7 @@ def login_usuario(request):
 
     return render(
         request,
-        "usuarios/login.html"
+        "user/login.html"
     )
 
 
@@ -39,7 +39,7 @@ def login_usuario(request):
 def inicio(request):
     return render(
         request,
-        "usuarios/inicio.html"
+        "user/inicio.html"
     )
 
 
