@@ -23,7 +23,8 @@ def detalle_usuario(request, id):
         'usuarios/usuario_detail.html',
         {'usuario': usuario}
     )
-
+def crear_usuario_html(request):
+    return render(request, 'usuarios/usuario_crear.html')
 
 class LeerUsuarios(APIView):
 
