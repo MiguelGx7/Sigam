@@ -13,30 +13,6 @@ def roles_list(request):
     })
 
 
-def roles_create(request):
-    if request.method == 'POST':
-        nombre = request.POST.get('nombre', '').strip()
-        if not nombre:
-            return render(request, 'usuarios/roles_form.html', {
-                'error': 'Ingresa un nombre para el rol.',
-                'nombre': nombre,
-                'titulo': 'Nuevo rol',
-            })
-
-        if Rol.objects.filter(nombre__iexact=nombre).exists():
-            return render(request, 'usuarios/roles_form.html', {
-                'error': 'Ya existe un rol con ese nombre.',
-                'nombre': nombre,
-                'titulo': 'Nuevo rol',
-            })
-
-        Rol.objects.create(nombre=nombre)
-        messages.success(request, 'Rol creado correctamente.')
-        return redirect('roles_list')
-
-    return render(request, 'usuarios/roles_form.html', {'titulo': 'Nuevo rol'})
-
-
 def roles_edit(request, id_rol):
     rol = get_object_or_404(Rol, id_rol=id_rol)
 
@@ -91,50 +67,44 @@ def _nombre_desde_request(request):
     return datos.get('nombre', '').strip()
 
 
-def _api_response(datos, status=200):
+def _api_response(request, datos, status=200):
     respuesta = JsonResponse(datos, safe=isinstance(datos, dict), status=status)
-    respuesta['Access-Control-Allow-Origin'] = 'http://localhost:4200'
+    origen = request.headers.get('Origin')
+    if origen in {'http://localhost:4200', 'http://127.0.0.1:4200'}:
+        respuesta['Access-Control-Allow-Origin'] = origen
+    else:
+        respuesta['Access-Control-Allow-Origin'] = 'http://localhost:4200'
     respuesta['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, OPTIONS'
     respuesta['Access-Control-Allow-Headers'] = 'Content-Type'
     return respuesta
 
 
 @csrf_exempt
-@require_http_methods(['GET', 'POST', 'OPTIONS'])
+@require_http_methods(['GET', 'OPTIONS'])
 def roles_api(request):
     if request.method == 'OPTIONS':
-        return _api_response({})
-    if request.method == 'GET':
-        roles = list(Rol.objects.order_by('nombre').values('id_rol', 'nombre'))
-        return _api_response(roles)
-
-    nombre = _nombre_desde_request(request)
-    if not nombre:
-        return _api_response({'error': 'El nombre del rol es obligatorio.'}, status=400)
-    if Rol.objects.filter(nombre__iexact=nombre).exists():
-        return _api_response({'error': 'Ya existe un rol con ese nombre.'}, status=400)
-
-    rol = Rol.objects.create(nombre=nombre)
-    return _api_response({'id_rol': rol.id_rol, 'nombre': rol.nombre}, status=201)
+        return _api_response(request, {})
+    roles = list(Rol.objects.order_by('nombre').values('id_rol', 'nombre'))
+    return _api_response(request, roles)
 
 
 @csrf_exempt
 @require_http_methods(['PUT', 'DELETE', 'OPTIONS'])
 def rol_api_detail(request, id_rol):
     if request.method == 'OPTIONS':
-        return _api_response({})
+        return _api_response(request, {})
     rol = get_object_or_404(Rol, id_rol=id_rol)
 
     if request.method == 'DELETE':
         rol.delete()
-        return _api_response({}, status=204)
+        return _api_response(request, {}, status=204)
 
     nombre = _nombre_desde_request(request)
     if not nombre:
-        return _api_response({'error': 'El nombre del rol es obligatorio.'}, status=400)
+        return _api_response(request, {'error': 'El nombre del rol es obligatorio.'}, status=400)
     if Rol.objects.filter(nombre__iexact=nombre).exclude(id_rol=rol.id_rol).exists():
-        return _api_response({'error': 'Ya existe un rol con ese nombre.'}, status=400)
+        return _api_response(request, {'error': 'Ya existe un rol con ese nombre.'}, status=400)
 
     rol.nombre = nombre
     rol.save(update_fields=['nombre'])
-    return _api_response({'id_rol': rol.id_rol, 'nombre': rol.nombre})
+    return _api_response(request, {'id_rol': rol.id_rol, 'nombre': rol.nombre})

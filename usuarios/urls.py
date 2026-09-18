@@ -3,7 +3,7 @@ from django.urls import path
 
 from usuarios.views_login import inicio, login_usuario, logout_usuario
 from usuarios.views_roles import (
-    rol_api_detail, roles_api, roles_create, roles_delete, roles_edit, roles_list,
+    rol_api_detail, roles_api, roles_delete, roles_edit, roles_list,
 )
 from usuarios.views_usuario import CrearUsuario, LeerUsuarios
 
@@ -13,7 +13,6 @@ urlpatterns = [
     path('logout/', logout_usuario, name='logout'),
     path('recuperar/', auth_views.PasswordResetView.as_view(template_name='usuarios/recuperar_temp.html'), name='password_reset'),
     path('roles/', roles_list, name='roles_list'),
-    path('roles/nuevo/', roles_create, name='roles_create'),
     path('roles/editar/<int:id_rol>/', roles_edit, name='roles_edit'),
     path('roles/eliminar/<int:id_rol>/', roles_delete, name='roles_delete'),
     path('api/roles/', roles_api, name='roles_api'),

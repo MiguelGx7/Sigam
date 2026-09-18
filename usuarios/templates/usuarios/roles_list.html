@@ -29,8 +29,7 @@
     <header><div class="marca"><a href="{% url 'inicio' %}">SIGAM</a><span>{{ user.username }}</span></div></header>
     <main>
         <div class="encabezado">
-            <div><h1>Gestión de roles</h1><p class="subtitulo">Crea y administra los roles disponibles en el sistema.</p></div>
-            <a class="boton" href="{% url 'roles_create' %}">+ Nuevo rol</a>
+            <div><h1>Gestión de roles</h1><p class="subtitulo">Edita o elimina los roles disponibles en el sistema.</p></div>
         </div>
         {% for message in messages %}<div class="alerta">{{ message }}</div>{% endfor %}
         <section class="panel">
