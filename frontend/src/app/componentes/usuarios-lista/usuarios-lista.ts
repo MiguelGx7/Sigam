@@ -33,7 +33,8 @@ export class UsuariosLista implements OnInit {
 
     if (typeof value === 'object') {
       const objectValue = value as Record<string, unknown>;
-      const objectName = typeof objectValue.nombre === 'string' ? objectValue.nombre.trim() : '';
+      const nombre = objectValue['nombre'];
+      const objectName = typeof nombre === 'string' ? nombre.trim() : '';
       return objectName || fallback;
     }
 
@@ -47,20 +48,23 @@ export class UsuariosLista implements OnInit {
 
     if (typeof rol === 'object') {
       const objectValue = rol as Record<string, unknown>;
-      return this.getDisplayValue(objectValue.nombre, 'Sin rol');
+      return this.getDisplayValue(objectValue['nombre'], 'Sin rol');
     }
 
     return this.getDisplayValue(rol, 'Sin rol');
   }
 
   normalizarUsuarios(response: any[]): any[] {
-    return response.map((usuario) => ({
-      ...usuario,
-      nombre: this.getDisplayValue(usuario?.nombre, 'Sin nombre'),
-      username: this.getDisplayValue(usuario?.username ?? usuario?.email, 'Sin usuario'),
-      email: this.getDisplayValue(usuario?.email, 'Sin correo'),
-      rol: this.getRolLabel(usuario?.rol)
-    }));
+    return response.map((usuario) => {
+      const usuarioObj = usuario as Record<string, unknown>;
+      return {
+        ...usuario,
+        nombre: this.getDisplayValue(usuarioObj['nombre'], 'Sin nombre'),
+        username: this.getDisplayValue(usuarioObj['username'] ?? usuarioObj['email'], 'Sin usuario'),
+        email: this.getDisplayValue(usuarioObj['email'], 'Sin correo'),
+        rol: this.getRolLabel(usuarioObj['rol'])
+      };
+    });
   }
 
   ngOnInit(): void {
