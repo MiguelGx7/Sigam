@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roles | SIGAM</title>
+    <style>
+        :root { --naranja:#ff6b00; --oscuro:#263238; --fondo:#f6f7f9; --borde:#e7eaee; }
+        * { box-sizing:border-box; }
+        body { margin:0; font-family:Arial, sans-serif; color:var(--oscuro); background:var(--fondo); }
+        header { background:var(--naranja); color:#fff; padding:26px max(20px, calc((100% - 980px) / 2)); }
+        .marca { display:flex; align-items:center; justify-content:space-between; gap:16px; }
+        .marca a { color:#fff; text-decoration:none; font-size:18px; font-weight:bold; }
+        .marca span { font-size:14px; opacity:.9; }
+        main { max-width:980px; padding:34px 20px; margin:auto; }
+        .encabezado { display:flex; align-items:center; justify-content:space-between; gap:20px; margin-bottom:24px; }
+        h1 { margin:0 0 6px; font-size:28px; } .subtitulo { margin:0; color:#64717a; }
+        .boton { display:inline-flex; align-items:center; justify-content:center; border:0; border-radius:9px; padding:12px 16px; background:var(--naranja); color:#fff; font-size:14px; font-weight:bold; text-decoration:none; cursor:pointer; }
+        .alerta { margin:0 0 20px; padding:13px 15px; border-radius:9px; color:#19683c; background:#e8f7ee; }
+        .panel { overflow:hidden; border:1px solid var(--borde); border-radius:14px; background:#fff; box-shadow:0 4px 16px rgba(30,45,55,.05); }
+        table { border-collapse:collapse; width:100%; } th, td { padding:17px 20px; text-align:left; border-bottom:1px solid var(--borde); }
+        th { color:#64717a; background:#fafbfc; font-size:12px; letter-spacing:.04em; text-transform:uppercase; } tr:last-child td { border-bottom:0; }
+        .acciones { display:flex; justify-content:flex-end; gap:16px; } .acciones a { color:var(--naranja); font-size:14px; font-weight:bold; text-decoration:none; }
+        .vacio { padding:48px 20px; text-align:center; color:#64717a; } .vacio strong { display:block; color:var(--oscuro); font-size:17px; margin-bottom:7px; }
+        @media (max-width:560px) { header { padding:20px; } main { padding:25px 16px; } .encabezado { align-items:flex-start; flex-direction:column; } .boton { width:100%; } th, td { padding:14px; } th:first-child, td:first-child { display:none; } }
+    </style>
+</head>
+<body>
+    <header><div class="marca"><a href="{% url 'inicio' %}">SIGAM</a><span>{{ user.username }}</span></div></header>
+    <main>
+        <div class="encabezado">
+            <div><h1>Gestión de roles</h1><p class="subtitulo">Crea y administra los roles disponibles en el sistema.</p></div>
+            <a class="boton" href="{% url 'roles_create' %}">+ Nuevo rol</a>
+        </div>
+        {% for message in messages %}<div class="alerta">{{ message }}</div>{% endfor %}
+        <section class="panel">
+            {% if roles %}
+            <table>
+                <thead><tr><th>ID</th><th>Nombre del rol</th><th aria-label="Acciones"></th></tr></thead>
+                <tbody>{% for rol in roles %}<tr><td>#{{ rol.id_rol }}</td><td>{{ rol.nombre }}</td><td><div class="acciones"><a href="{% url 'roles_edit' rol.id_rol %}">Editar</a><a href="{% url 'roles_delete' rol.id_rol %}">Eliminar</a></div></td></tr>{% endfor %}</tbody>
+            </table>
+            {% else %}<div class="vacio"><strong>Aún no hay roles creados.</strong>Agrega el primer rol para comenzar.</div>{% endif %}
+        </section>
+    </main>
+</body>
+</html>
