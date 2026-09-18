@@ -77,6 +77,9 @@
       </div>
       <small class="error-text checkbox-error" *ngIf="isInvalid('aceptaTerminos')">Debes aceptar los términos para registrarte.</small>
       
+      <div class="message success" *ngIf="successMessage">{{ successMessage }}</div>
+      <div class="message error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
       <!-- Botón Submit -->
       <button type="submit" class="btn-submit" [disabled]="registroForm.invalid || isLoading">
         <span *ngIf="!isLoading">Registrar Usuario</span>
@@ -85,7 +88,7 @@
 
       <!-- Enlace a Login -->
       <div class="login-link">
-        ¿Ya tienes una cuenta? <a routerLink="/login">Inicia Sesión</a>
+        ¿Deseas ver el listado? <a routerLink="/usuarios">Ir a usuarios</a>
       </div>
     </form>
   </div>

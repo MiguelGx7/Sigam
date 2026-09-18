@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth';
 
 @Component({
@@ -14,8 +14,14 @@ import { AuthService } from '../../services/auth';
 export class Registro {
   registroForm: FormGroup;
   isLoading = false;
+  successMessage = '';
+  errorMessage = '';
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.registroForm = this.fb.group({
       nombre: ['', [Validators.required, Validators.minLength(2)]],
       apellido: ['', [Validators.required, Validators.minLength(2)]],
@@ -24,12 +30,11 @@ export class Registro {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]],
-      rol: ['paramedico', Validators.required],
+      rol: ['operador', Validators.required],
       aceptaTerminos: [false, Validators.requiredTrue]
     }, { validators: this.passwordMatchValidator });
   }
 
-  // Validador personalizado para comprobar que las contraseñas coincidan
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const password = control.get('password')?.value;
     const confirmPassword = control.get('confirmPassword')?.value;
@@ -40,24 +45,40 @@ export class Registro {
     return null;
   }
 
-  // Método auxiliar para saber si un campo es inválido y fue tocado
   isInvalid(fieldName: string): boolean {
     const field = this.registroForm.get(fieldName);
     return !!(field && field.invalid && (field.dirty || field.touched));
   }
 
   onSubmit(): void {
-    if (this.registroForm.valid) {
-      this.isLoading = true;
-      console.log('Datos del registro SIGAM:', this.registroForm.value);
-
-      // Simulación de envío a la API
-      setTimeout(() => {
-        this.isLoading = false;
-        alert('¡Usuario registrado exitosamente en el sistema SIGAM!');
-      }, 1500);
-    } else {
+    if (this.registroForm.invalid) {
       this.registroForm.markAllAsTouched();
+      return;
     }
+
+    this.isLoading = true;
+    this.successMessage = '';
+    this.errorMessage = '';
+
+    const { nombre, apellido, email, password, rol } = this.registroForm.value;
+
+    this.authService.registrarUsuario({
+      username: email,
+      nombre: `${nombre} ${apellido}`.trim(),
+      email,
+      password,
+      rol
+    }).subscribe({
+      next: () => {
+        this.successMessage = 'Usuario registrado correctamente.';
+        this.isLoading = false;
+        this.registroForm.reset({ rol: 'operador', aceptaTerminos: false });
+        setTimeout(() => this.router.navigate(['/usuarios']), 800);
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.errorMessage = error?.error?.detail || error?.error?.message || 'No se pudo registrar el usuario.';
+      }
+    });
   }
 }
