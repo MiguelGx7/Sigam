@@ -18,6 +18,8 @@ urlpatterns = [
     path('usuarios/', LeerUsuarios.as_view(), name='usuarios_listar'),
     path('usuarios/lista/', lista_usuarios, name='usuarios_lista'),
     path('usuarios/crear/', CrearUsuario.as_view(), name='usuarios_crear'),
+    path('usuarios/editar/<int:id>/', CrearUsuario.as_view(), name='usuarios_editar'),
+    path('usuarios/eliminar/<int:id>/', CrearUsuario.as_view(), name='usuarios_eliminar'),
     path('usuarios/detalle/<int:id>/', detalle_usuario, name='usuarios_detalle'),
     
 ]
