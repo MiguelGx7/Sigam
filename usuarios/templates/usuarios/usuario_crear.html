@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Crear Usuario</title>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+        margin: 40px;
+    }
+
+    h1 {
+        text-align: center;
+        color: #333333;
+    }
+
+    form {
+        width: 400px;
+        margin: auto;
+        background-color: white;
+        padding: 25px;
+        border-radius: 8px;
+    }
+
+    label {
+        display: block;
+        margin-top: 15px;
+        margin-bottom: 5px;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+
+    button {
+        width: 100%;
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #333333;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #555555;
+    }
+</style>
+
+
+</head>
+
+<body>
+
+
+<h1>Crear Usuario</h1>
+
+<form id="formCrearUsuario">
+    <label>Nombre</label>
+    <input type="text" name="nombre">
+
+    <label>Email</label>
+    <input type="email" name="email">
+
+    <label>Usuario</label>
+    <input type="text" name="username">
+
+    <label>Contraseña</label>
+    <input type="password" name="password">
+
+    <button type="submit">Crear Usuario</button>
+</form>
+<script>
+    document.getElementById("formCrearUsuario").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const datos = {
+            nombre: document.querySelector('input[name="nombre"]').value,
+            email: document.querySelector('input[name="email"]').value,
+            username: document.querySelector('input[name="username"]').value,
+            password: document.querySelector('input[name="password"]').value
+        };
+
+        fetch("/usuarios/crear/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(datos)
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            alert("Usuario creado correctamente");
+        })
+        .catch(error => {
+            console.error(error);
+            alert("Ocurrió un error al crear el usuario");
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,10 +1,30 @@
-﻿from rest_framework.views import APIView
+﻿from django.shortcuts import render
+
+from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
 from .models import Usuario
 from .serializers import UsuarioSerializer
 
+
+def lista_usuarios(request):
+    usuarios = Usuario.objects.all()
+    return render(
+        request,
+        'usuarios/usuario_list.html',
+        {'usuarios': usuarios}
+    )
+
+def detalle_usuario(request, id):
+    usuario = Usuario.objects.get(id=id)
+    return render(
+        request,
+        'usuarios/usuario_detail.html',
+        {'usuario': usuario}
+    )
+def crear_usuario_html(request):
+    return render(request, 'usuarios/usuario_crear.html')
 
 class LeerUsuarios(APIView):
 
