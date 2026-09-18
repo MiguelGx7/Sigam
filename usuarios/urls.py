@@ -1,15 +1,13 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
-
-from usuarios.views_login import login_usuario, inicio, logout_usuario
+from rest_framework_simplejwt.views import TokenRefreshView
+from usuarios.views_login import LoginView
 from usuarios.views_roles import roles_edit, roles_delete
 from usuarios.views_usuario import CrearUsuario, LeerUsuarios
 
 urlpatterns = [
-    path('login/', login_usuario, name='login'),
-    path('inicio/', inicio, name='inicio'),
-    path('logout/', logout_usuario, name='logout'),
-    path('recuperar/', auth_views.PasswordResetView.as_view(template_name='usuarios/recuperar_temp.html'), name='password_reset'),
+    path('login/', LoginView.as_view(), name='login'),
+    path('login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 
     path('roles/editar/<int:id_rol>/', roles_edit, name='roles_edit'),
     path('roles/eliminar/<int:id_rol>/', roles_delete, name='roles_delete'),
