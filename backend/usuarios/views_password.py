@@ -9,7 +9,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Usuario
+from .models import SolicitudCambioPassword, Usuario
 
 token_generator = PasswordResetTokenGenerator()
 
@@ -25,6 +25,9 @@ class RecuperarPasswordView(APIView):
         usuario = Usuario.objects.filter(email=email).first()
 
         if usuario is not None:
+            # La persona recibe su enlace y el Super Administrador ve una alerta en el panel.
+            # get_or_create evita varias alertas pendientes por la misma cuenta.
+            SolicitudCambioPassword.objects.get_or_create(usuario=usuario, atendida=False)
             uid = urlsafe_base64_encode(force_bytes(usuario.pk))
             token = token_generator.make_token(usuario)
             link = f'{settings.FRONTEND_URL}/recuperar/confirmar?uid={uid}&token={token}'

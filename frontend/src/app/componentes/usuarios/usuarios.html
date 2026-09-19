@@ -9,6 +9,22 @@
 <div class="error-text" *ngIf="errorMessage">{{ errorMessage }}</div>
 <div class="success-text" *ngIf="successMessage">{{ successMessage }}</div>
 
+<section class="solicitudes-password" *ngIf="esSuperAdministrador && solicitudesPassword.length > 0">
+  <div class="solicitudes-header">
+    <h2>Solicitudes de cambio de contraseña</h2>
+    <p>Tienes {{ solicitudesPassword.length }} solicitud{{ solicitudesPassword.length === 1 ? '' : 'es' }} pendiente{{ solicitudesPassword.length === 1 ? '' : 's' }}.</p>
+  </div>
+  <div class="solicitudes-lista">
+    <article class="solicitud-item" *ngFor="let solicitud of solicitudesPassword">
+      <div>
+        <strong>{{ solicitud.usuario_nombre }}</strong>
+        <span>{{ solicitud.usuario_email }}</span>
+      </div>
+      <button class="btn-submit btn-inline" (click)="abrirCambioContrasena({ id: solicitud.usuario, nombre: solicitud.usuario_nombre, email: solicitud.usuario_email, rol: null, rol_nombre: null, is_active: true })">Atender solicitud</button>
+    </article>
+  </div>
+</section>
+
 <div class="panel-card">
   <table class="usuarios-table">
     <thead>
@@ -38,6 +54,7 @@
         <td>
           <div class="acciones-usuario">
             <button class="btn-editar" (click)="abrirModal(usuario)">Editar</button>
+            <button *ngIf="esSuperAdministrador" class="btn-cambiar-password" (click)="abrirCambioContrasena(usuario)">Cambiar contraseña</button>
             <button class="btn-eliminar" (click)="eliminarUsuario(usuario)">Eliminar</button>
           </div>
         </td>
@@ -50,6 +67,36 @@
       </tr>
     </tbody>
   </table>
+</div>
+
+<!-- Solo el Super Administrador puede abrir este modal y el backend valida el mismo permiso. -->
+<div class="modal-overlay" *ngIf="modalCambiarContrasenaAbierto" (click)="cerrarCambioContrasena()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div>
+        <h3>Restablecer contraseña</h3>
+        <p class="modal-intro">Define una nueva contraseña para {{ usuarioParaCambiarContrasena?.nombre }}.</p>
+      </div>
+      <button class="modal-close" (click)="cerrarCambioContrasena()" aria-label="Cerrar">✕</button>
+    </div>
+
+    <form [formGroup]="cambiarContrasenaForm" (ngSubmit)="cambiarContrasenaComoAdministrador()">
+      <div class="form-group">
+        <label for="passwordAdministrativa">Nueva contraseña</label>
+        <input id="passwordAdministrativa" type="password" formControlName="password" autocomplete="new-password" placeholder="Mínimo 6 caracteres" />
+        <small class="error-text" *ngIf="cambiarContrasenaForm.get('password')?.invalid && cambiarContrasenaForm.get('password')?.touched">La contraseña debe tener al menos 6 caracteres.</small>
+      </div>
+      <div class="form-group">
+        <label for="confirmarPasswordAdministrativa">Confirmar contraseña</label>
+        <input id="confirmarPasswordAdministrativa" type="password" formControlName="confirmarPassword" autocomplete="new-password" placeholder="Repite la contraseña" />
+        <small class="error-text" *ngIf="cambiarContrasenaForm.get('confirmarPassword')?.hasError('passwordMismatch') && cambiarContrasenaForm.get('confirmarPassword')?.touched">Las contraseñas no coinciden.</small>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secundario" (click)="cerrarCambioContrasena()">Cancelar</button>
+        <button type="submit" class="btn-submit btn-inline" [disabled]="cambiarContrasenaForm.invalid">Actualizar contraseña</button>
+      </div>
+    </form>
+  </div>
 </div>
 
 <!-- Ventana emergente: crear usuario -->

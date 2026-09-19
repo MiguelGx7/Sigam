@@ -52,3 +52,18 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.nombre
+
+
+class SolicitudCambioPassword(models.Model):
+    """Notificación interna generada cuando un usuario pide recuperar su contraseña."""
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='solicitudes_password')
+    creada_en = models.DateTimeField(auto_now_add=True)
+    atendida = models.BooleanField(default=False)
+    atendida_en = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        db_table = 'solicitudes_cambio_password'
+        ordering = ['-creada_en']
+
+    def __str__(self):
+        return f'Solicitud de {self.usuario.email}'

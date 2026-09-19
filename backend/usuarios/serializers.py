@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 
-from .models import Rol, Usuario
+from .models import Rol, SolicitudCambioPassword, Usuario
 
 
 class RolSerializer(serializers.ModelSerializer):
@@ -41,6 +41,15 @@ class UsuarioSerializer(serializers.ModelSerializer):
 
     def get_rol_nombre(self, obj):
         return obj.rol.nombre if obj.rol else None
+
+
+class SolicitudCambioPasswordSerializer(serializers.ModelSerializer):
+    usuario_nombre = serializers.CharField(source='usuario.nombre', read_only=True)
+    usuario_email = serializers.EmailField(source='usuario.email', read_only=True)
+
+    class Meta:
+        model = SolicitudCambioPassword
+        fields = ['id', 'usuario', 'usuario_nombre', 'usuario_email', 'creada_en']
 
 
 class LoginSerializer(serializers.Serializer):

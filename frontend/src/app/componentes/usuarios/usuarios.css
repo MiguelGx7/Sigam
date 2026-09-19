@@ -64,6 +64,16 @@ h3 {
   text-decoration: underline;
 }
 
+.btn-cambiar-password {
+  border: none;
+  background: transparent;
+  color: #b45309;
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+  text-decoration: underline;
+}
+
 .btn-editar {
   color: #2563eb;
 }
@@ -72,9 +82,60 @@ h3 {
   color: #1d4ed8;
 }
 
+.solicitudes-password {
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  border-radius: 10px;
+  margin: 18px 0;
+  padding: 18px;
+}
+
+.solicitudes-header h2 {
+  color: #78350f;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.solicitudes-header p {
+  color: #92400e;
+  font-size: 0.85rem;
+  margin: 4px 0 12px;
+}
+
+.solicitudes-lista {
+  display: grid;
+  gap: 10px;
+}
+
+.solicitud-item {
+  align-items: center;
+  background: #ffffff;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+}
+
+.solicitud-item strong,
+.solicitud-item span {
+  display: block;
+}
+
+.solicitud-item span {
+  color: #64748b;
+  font-size: 0.82rem;
+  margin-top: 3px;
+}
+
 @media (max-width: 520px) {
   .form-row {
     flex-direction: column;
     gap: 0;
+  }
+
+  .solicitud-item {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
   }
 }

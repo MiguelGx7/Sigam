@@ -2,7 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
-import { UsuariosService, Usuario, Rol } from '../../services/usuarios';
+import { UsuariosService, Usuario, Rol, SolicitudCambioPassword } from '../../services/usuarios';
+import { AuthService } from '../../services/auth';
 
 @Component({
   selector: 'app-usuarios',
@@ -14,18 +15,24 @@ import { UsuariosService, Usuario, Rol } from '../../services/usuarios';
 export class Usuarios implements OnInit {
   usuarios: Usuario[] = [];
   roles: Rol[] = [];
+  solicitudesPassword: SolicitudCambioPassword[] = [];
   cargando = true;
 
   modalAbierto = false;
   nuevoUsuarioForm: FormGroup;
   mostrarContrasena = false;
   usuarioEditando: Usuario | null = null;
+  usuarioParaCambiarContrasena: Usuario | null = null;
+  modalCambiarContrasenaAbierto = false;
+  cambiarContrasenaForm: FormGroup;
+  esSuperAdministrador = false;
 
   errorMessage: string | null = null;
   successMessage: string | null = null;
 
   constructor(
     private usuariosService: UsuariosService,
+    private authService: AuthService,
     private fb: FormBuilder
   ) {
     this.nuevoUsuarioForm = this.fb.group({
@@ -36,9 +43,15 @@ export class Usuarios implements OnInit {
       confirmarPassword: ['', Validators.required],
       is_active: [true],
     }, { validators: this.validarCoincidenciaContrasenas });
+
+    this.cambiarContrasenaForm = this.fb.group({
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      confirmarPassword: ['', Validators.required],
+    }, { validators: this.validarCoincidenciaContrasenas });
   }
 
   ngOnInit(): void {
+    this.esSuperAdministrador = this.authService.esSuperAdministrador();
     this.cargarDatos();
   }
 
@@ -57,6 +70,26 @@ export class Usuarios implements OnInit {
     this.usuariosService.listarRoles().subscribe({
       next: (roles) => (this.roles = roles),
       error: (err) => (this.errorMessage = this.extraerMensajeError(err)),
+    });
+    // Se consulta siempre: el backend es la fuente real del permiso.
+    // Esto también funciona con sesiones iniciadas antes de guardar el rol en localStorage.
+    this.cargarSolicitudesPassword();
+  }
+
+  cargarSolicitudesPassword(): void {
+    this.usuariosService.listarSolicitudesPassword().subscribe({
+      next: (solicitudes) => {
+        this.esSuperAdministrador = true;
+        this.solicitudesPassword = solicitudes;
+      },
+      error: (err) => {
+        if (err.status === 403) {
+          this.esSuperAdministrador = false;
+          this.solicitudesPassword = [];
+          return;
+        }
+        this.errorMessage = this.extraerMensajeError(err);
+      },
     });
   }
 
@@ -150,6 +183,36 @@ export class Usuarios implements OnInit {
       next: () => {
         this.usuarios = this.usuarios.filter((u) => u.id !== usuario.id);
         this.successMessage = 'Usuario eliminado.';
+      },
+      error: (err) => (this.errorMessage = this.extraerMensajeError(err)),
+    });
+  }
+
+  abrirCambioContrasena(usuario: Usuario): void {
+    this.usuarioParaCambiarContrasena = usuario;
+    this.cambiarContrasenaForm.reset();
+    this.modalCambiarContrasenaAbierto = true;
+  }
+
+  cerrarCambioContrasena(): void {
+    this.modalCambiarContrasenaAbierto = false;
+    this.usuarioParaCambiarContrasena = null;
+    this.cambiarContrasenaForm.reset();
+  }
+
+  cambiarContrasenaComoAdministrador(): void {
+    if (!this.usuarioParaCambiarContrasena || this.cambiarContrasenaForm.invalid) {
+      this.cambiarContrasenaForm.markAllAsTouched();
+      return;
+    }
+
+    this.limpiarMensajes();
+    const password = this.cambiarContrasenaForm.value.password;
+    this.usuariosService.cambiarPasswordAdministrativa(this.usuarioParaCambiarContrasena.id, password).subscribe({
+      next: (respuesta) => {
+        this.successMessage = `Contraseña de ${this.usuarioParaCambiarContrasena?.nombre} actualizada. ${respuesta.mensaje}`;
+        this.cerrarCambioContrasena();
+        this.cargarSolicitudesPassword();
       },
       error: (err) => (this.errorMessage = this.extraerMensajeError(err)),
     });

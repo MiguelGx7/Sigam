@@ -18,6 +18,14 @@ export interface Rol {
   nombre: string;
 }
 
+export interface SolicitudCambioPassword {
+  id: number;
+  usuario: number;
+  usuario_nombre: string;
+  usuario_email: string;
+  creada_en: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -86,5 +94,13 @@ export class UsuariosService {
 
   eliminar(id: number): Observable<any> {
     return this.http.delete(`${API_BASE_URL}/usuarios/eliminar/${id}/`);
+  }
+
+  cambiarPasswordAdministrativa(id: number, password: string): Observable<{ mensaje: string }> {
+    return this.http.post<{ mensaje: string }>(`${API_BASE_URL}/usuarios/${id}/cambiar-password/`, { password });
+  }
+
+  listarSolicitudesPassword(): Observable<SolicitudCambioPassword[]> {
+    return this.http.get<SolicitudCambioPassword[]>(`${API_BASE_URL}/usuarios/solicitudes-password/`);
   }
 }

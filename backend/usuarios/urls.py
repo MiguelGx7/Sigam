@@ -3,7 +3,7 @@ from rest_framework_simplejwt.views import TokenRefreshView
 from usuarios.views_login import LoginView
 from usuarios.views_password import RecuperarPasswordView, ConfirmarPasswordView
 from usuarios.views_roles import RolListCreateView, RolDetailView
-from usuarios.views_usuario import CrearUsuario, LeerUsuarios, lista_usuarios, detalle_usuario, crear_usuario_html
+from usuarios.views_usuario import CambiarPasswordAdministrativaView, CrearUsuario, LeerUsuarios, SolicitudesCambioPasswordView, lista_usuarios, detalle_usuario, crear_usuario_html
 
 
 urlpatterns = [
@@ -20,8 +20,10 @@ urlpatterns = [
     path('usuarios/lista/', lista_usuarios, name='usuarios_lista'),
     path('usuarios/nuevo/', crear_usuario_html, name='usuario_crear_html'),
     path('usuarios/crear/', CrearUsuario.as_view(), name='usuarios_crear'),
+    path('usuarios/solicitudes-password/', SolicitudesCambioPasswordView.as_view(), name='usuarios_solicitudes_password'),
     path('usuarios/editar/<int:id>/', CrearUsuario.as_view(), name='usuarios_editar'),
     path('usuarios/eliminar/<int:id>/', CrearUsuario.as_view(), name='usuarios_eliminar'),
+    path('usuarios/<int:id>/cambiar-password/', CambiarPasswordAdministrativaView.as_view(), name='usuarios_cambiar_password'),
     path('usuarios/detalle/<int:id>/', detalle_usuario, name='usuarios_detalle'),
 
 ]

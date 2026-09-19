@@ -1,12 +1,14 @@
 ﻿from django.shortcuts import render
 
+from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
-from .models import Usuario
-from .serializers import UsuarioSerializer
+from .models import SolicitudCambioPassword, Usuario
+from .permissions import EsSuperAdministrador
+from .serializers import SolicitudCambioPasswordSerializer, UsuarioSerializer
 
 
 def lista_usuarios(request):
@@ -95,3 +97,70 @@ class CrearUsuario(APIView):
             {'mensaje': 'Usuario eliminado correctamente'},
             status=status.HTTP_204_NO_CONTENT
         )
+
+
+class CambiarPasswordAdministrativaView(APIView):
+    """Permite al Super Administrador restablecer la clave de un usuario."""
+    permission_classes = [EsSuperAdministrador]
+
+    def post(self, request, id):
+        nueva_password = request.data.get('password', '')
+
+        if len(nueva_password) < 6:
+            return Response(
+                {'password': 'La contraseña debe tener al menos 6 caracteres.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            usuario = Usuario.objects.get(id=id)
+        except Usuario.DoesNotExist:
+            return Response(
+                {'error': 'Usuario no encontrado'},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        usuario.set_password(nueva_password)
+        usuario.save(update_fields=['password'])
+        SolicitudCambioPassword.objects.filter(usuario=usuario, atendida=False).update(
+            atendida=True,
+            atendida_en=timezone.now(),
+        )
+
+        return Response({'mensaje': 'Contraseña actualizada correctamente.'})
+
+
+class SolicitudesCambioPasswordView(APIView):
+    """Lista las solicitudes pendientes que debe atender el Super Administrador."""
+    permission_classes = [EsSuperAdministrador]
+
+    def get(self, request):
+        solicitudes = SolicitudCambioPassword.objects.filter(atendida=False).select_related('usuario')
+        return Response(SolicitudCambioPasswordSerializer(solicitudes, many=True).data)
+
+
+class CambiarPasswordAdministrativaView(APIView):
+    """Permite al Super Administrador restablecer la clave de un usuario."""
+    permission_classes = [EsSuperAdministrador]
+
+    def post(self, request, id):
+        nueva_password = request.data.get('password', '')
+
+        if len(nueva_password) < 6:
+            return Response(
+                {'password': 'La contraseña debe tener al menos 6 caracteres.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            usuario = Usuario.objects.get(id=id)
+        except Usuario.DoesNotExist:
+            return Response(
+                {'error': 'Usuario no encontrado'},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        usuario.set_password(nueva_password)
+        usuario.save(update_fields=['password'])
+
+        return Response({'mensaje': 'Contraseña actualizada correctamente.'})

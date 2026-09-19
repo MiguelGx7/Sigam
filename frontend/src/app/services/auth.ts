@@ -5,6 +5,7 @@ import { Observable, tap } from 'rxjs';
 const API_BASE_URL = 'http://127.0.0.1:8000';
 const ACCESS_TOKEN_KEY = 'sigam_access_token';
 const REFRESH_TOKEN_KEY = 'sigam_refresh_token';
+const USUARIO_KEY = 'sigam_usuario';
 
 export interface LoginResponse {
   access: string;
@@ -52,6 +53,7 @@ export class AuthService {
       tap((respuesta) => {
         localStorage.setItem(ACCESS_TOKEN_KEY, respuesta.access);
         localStorage.setItem(REFRESH_TOKEN_KEY, respuesta.refresh);
+        localStorage.setItem(USUARIO_KEY, JSON.stringify(respuesta.usuario));
       })
     );
   }
@@ -59,6 +61,7 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
+    localStorage.removeItem(USUARIO_KEY);
   }
 
   getAccessToken(): string | null {
@@ -67,6 +70,15 @@ export class AuthService {
 
   isAuthenticated(): boolean {
     return !!this.getAccessToken();
+  }
+
+  esSuperAdministrador(): boolean {
+    try {
+      const usuario = JSON.parse(localStorage.getItem(USUARIO_KEY) ?? 'null');
+      return usuario?.rol_nombre === 'Super Administrador';
+    } catch {
+      return false;
+    }
   }
 
   recuperarPassword(email: string): Observable<any> {
