@@ -1,0 +1,60 @@
+.roles-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.roles-table th {
+  text-align: left;
+  padding: 10px 12px;
+  background-color: #f8fafc;
+  color: #4e5052;
+  font-size: 0.8rem;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.roles-table td {
+  padding: 12px;
+  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.88rem;
+  vertical-align: middle;
+}
+
+.roles-table tbody tr:hover td {
+  background-color: #f8fafc;
+}
+
+.acciones-rol {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-editar,
+.btn-eliminar {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  text-decoration: underline;
+}
+
+.btn-editar {
+  color: #2563eb;
+}
+
+.btn-editar:hover {
+  color: #1d4ed8;
+}
+
+.btn-eliminar {
+  color: #dc2626;
+}
+
+.btn-eliminar:hover {
+  color: #991b1b;
+}
+
+.modal-intro {
+  margin: 4px 0 0;
+  color: #64748b;
+  font-size: 0.82rem;
+}

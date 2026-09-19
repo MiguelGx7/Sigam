@@ -1,9 +1,14 @@
 <div class="register-container">
   <div class="register-card">
+    <a class="back-to-login" routerLink="/login" aria-label="Volver al inicio de sesión">
+      <span aria-hidden="true">←</span> Volver a iniciar sesión
+    </a>
     <div class="header-title">
       <h2>SIGAM</h2>
       <p>Registro de Personal y Operadores</p>
     </div>
+
+    <div class="error-text" *ngIf="errorMessage" style="margin-bottom: 1rem;">{{ errorMessage }}</div>
 
     <form [formGroup]="registroForm" (ngSubmit)="onSubmit()">
       <!-- Nombre y Apellido -->
@@ -43,15 +48,6 @@
         <small class="error-text" *ngIf="isInvalid('email')">Ingresa un correo electrónico válido.</small>
       </div>
 
-      <!-- Rol en el sistema -->
-      <div class="form-group">
-        <label for="rol">Rol en el Sistema *</label>
-        <select id="rol" formControlName="rol">
-          <option value="conductor">Conductor de Ambulancia</option>
-          <option value="operador">Operador de Emergencias</option>
-          <option value="administrador">Administrador</option>
-        </select>
-      </div>
 
       <!-- Contraseñas -->
       <div class="form-row">

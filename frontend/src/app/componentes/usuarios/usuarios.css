@@ -1,0 +1,80 @@
+/* Estilos compartidos en src/styles.css (.admin-container, .admin-panel, .usuarios-table, etc.) */
+
+h3 {
+  color: #4e5052;
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.modal-intro {
+  margin: 4px 0 0;
+  color: #64748b;
+  font-size: 0.82rem;
+}
+
+.form-row {
+  display: flex;
+  gap: 12px;
+}
+
+.form-row .form-group {
+  flex: 1;
+}
+
+.password-control {
+  display: flex;
+  align-items: stretch;
+}
+
+.password-control input {
+  min-width: 0;
+  width: 100%;
+  border-radius: 6px 0 0 6px;
+}
+
+.btn-toggle-password {
+  border: 1.5px solid #cbd5e1;
+  border-left: 0;
+  border-radius: 0 6px 6px 0;
+  background: #f8fafc;
+  color: #475569;
+  cursor: pointer;
+  font-size: 0.76rem;
+  font-weight: 600;
+  padding: 0 10px;
+}
+
+.btn-toggle-password:hover {
+  background: #eef2ff;
+  color: #1e3a8a;
+}
+
+.acciones-usuario {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.btn-editar,
+.btn-eliminar {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.85rem;
+  text-decoration: underline;
+}
+
+.btn-editar {
+  color: #2563eb;
+}
+
+.btn-editar:hover {
+  color: #1d4ed8;
+}
+
+@media (max-width: 520px) {
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+}

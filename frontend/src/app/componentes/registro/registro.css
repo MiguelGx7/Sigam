@@ -17,6 +17,26 @@
   width: 100%;
   max-width: 520px;
   box-sizing: border-box;
+  position: relative;
+}
+
+.back-to-login {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #64748b;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.back-to-login:hover {
+  color: #ff6a00;
+}
+
+.back-to-login span {
+  font-size: 1.15rem;
+  line-height: 1;
 }
 
 .header-title {

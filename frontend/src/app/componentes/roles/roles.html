@@ -1,0 +1,64 @@
+<div class="page-header">
+  <div>
+    <h1>Roles</h1>
+    <p>Administra los roles y permisos disponibles en el sistema.</p>
+  </div>
+  <button class="btn-submit btn-inline" (click)="abrirModal()">+ Nuevo rol</button>
+</div>
+
+<div class="error-text" *ngIf="errorMessage">{{ errorMessage }}</div>
+<div class="success-text" *ngIf="successMessage">{{ successMessage }}</div>
+
+<div class="panel-card">
+  <table class="roles-table">
+    <thead>
+      <tr>
+        <th>Identificador</th>
+        <th>Nombre del rol</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let rol of roles">
+        <td>#{{ rol.id_rol }}</td>
+        <td>{{ rol.nombre }}</td>
+        <td>
+          <div class="acciones-rol">
+            <button class="btn-editar" (click)="abrirModal(rol)">Editar</button>
+            <button class="btn-eliminar" (click)="eliminarRol(rol)">Eliminar</button>
+          </div>
+        </td>
+      </tr>
+      <tr *ngIf="!cargando && roles.length === 0">
+        <td colspan="3" class="tabla-vacia">No hay roles registrados.</td>
+      </tr>
+      <tr *ngIf="cargando">
+        <td colspan="3" class="tabla-vacia">Cargando roles...</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="modal-overlay" *ngIf="modalAbierto" (click)="cerrarModal()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <div>
+        <h3>{{ esEdicion ? 'Editar rol' : 'Nuevo rol' }}</h3>
+        <p class="modal-intro">Define un nombre claro para identificar sus permisos.</p>
+      </div>
+      <button class="modal-close" (click)="cerrarModal()" aria-label="Cerrar">✕</button>
+    </div>
+
+    <form [formGroup]="rolForm" (ngSubmit)="guardarRol()">
+      <div class="form-group">
+        <label for="nombreRol">Nombre del rol</label>
+        <input id="nombreRol" type="text" formControlName="nombre" maxlength="100" placeholder="Ejemplo: Operador de Emergencias" />
+        <small class="error-text" *ngIf="rolForm.get('nombre')?.invalid && rolForm.get('nombre')?.touched">Escribe un nombre de al menos 3 caracteres.</small>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn-secundario" (click)="cerrarModal()">Cancelar</button>
+        <button type="submit" class="btn-submit btn-inline" [disabled]="rolForm.invalid">{{ esEdicion ? 'Guardar cambios' : 'Crear rol' }}</button>
+      </div>
+    </form>
+  </div>
+</div>
