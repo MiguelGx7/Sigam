@@ -94,6 +94,15 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
 
+# TLS contra MySQL: se usa si hay un CA disponible. DB_SSL_CA permite apuntar a
+# otra ruta (o dejarlo vacio para desactivarlo); si no se define, se toma
+# certs/ca.pem cuando el archivo existe. Asi un clon nuevo contra un MySQL local
+# arranca sin cert, y el MySQL del equipo sigue conectandose con TLS igual que antes.
+DB_SSL_CA = config('DB_SSL_CA', default=None)
+if DB_SSL_CA is None:
+    _ca_por_defecto = BASE_DIR / 'certs' / 'ca.pem'
+    DB_SSL_CA = str(_ca_por_defecto) if _ca_por_defecto.exists() else ''
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -102,9 +111,7 @@ DATABASES = {
         'PASSWORD': config('DB_PASSWORD'),
         'HOST': config('DB_HOST'),
         'PORT': config('DB_PORT'),
-        'OPTIONS': {
-            'ssl': {'ca': str(BASE_DIR / 'certs' / 'ca.pem')},
-        },
+        'OPTIONS': {'ssl': {'ca': DB_SSL_CA}} if DB_SSL_CA else {},
     }
 }
 
