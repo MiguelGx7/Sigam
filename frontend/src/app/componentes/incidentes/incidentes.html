@@ -1,0 +1,51 @@
+<div class="page-header">
+  <div>
+    <h1>Incidentes</h1>
+    <p>Gestiona el flujo del caso y avanza por los pasos del traslado.</p>
+  </div>
+</div>
+
+<div class="error-text" *ngIf="error">{{ error }}</div>
+<div class="success-text" *ngIf="exito">{{ exito }}</div>
+
+<div class="panel-card" *ngIf="!cargando; else loading">
+  <table class="usuarios-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Estado</th>
+        <th>Observaciones</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let incidente of incidentes">
+        <td>#{{ incidente.id }}</td>
+        <td>
+          <select [(ngModel)]="incidente.estado_incidente">
+            <option *ngFor="let estado of getEstados()" [ngValue]="estado.value">
+              {{ estado.label }}
+            </option>
+          </select>
+        </td>
+        <td>
+          <textarea [(ngModel)]="incidente.observaciones" rows="2" placeholder="Observaciones..."></textarea>
+        </td>
+        <td>
+          <button class="btn-submit btn-inline" type="button" (click)="actualizar(incidente)">
+            Guardar estado
+          </button>
+        </td>
+      </tr>
+      <tr *ngIf="incidentes.length === 0">
+        <td colspan="4" class="tabla-vacia">No hay incidentes registrados.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<ng-template #loading>
+  <div class="panel-card">
+    <div class="tabla-vacia">Cargando incidentes...</div>
+  </div>
+</ng-template>

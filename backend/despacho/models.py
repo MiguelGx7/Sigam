@@ -1,5 +1,15 @@
 from django.db import models
 
+ESTADOS_INCIDENTE = [
+    ('en_espera', 'En espera'),
+    ('llegada_incidente_confirmada', 'Llegada al incidente confirmada'),
+    ('observaciones_registradas', 'Observaciones registradas'),
+    ('traslado_iniciado', 'Traslado iniciado'),
+    ('hospital_seleccionado', 'Hospital seleccionado'),
+    ('llegada_hospital_confirmada', 'Llegada al hospital confirmada'),
+    ('cerrado', 'Cerrado'),
+]
+
 
 class Solicitud(models.Model):
     id_solicitud = models.AutoField(primary_key=True)
@@ -92,9 +102,16 @@ class Incidente(models.Model):
         related_name='incidentes',
     )
     descripcion = models.TextField(null=True, blank=True)
+    observaciones = models.TextField(null=True, blank=True)
     fecha_hora = models.DateTimeField(null=True, blank=True)
     ubicacion = models.CharField(max_length=255, null=True, blank=True)
-    estado_incidente = models.CharField(max_length=50, null=True, blank=True)
+    estado_incidente = models.CharField(
+        max_length=50,
+        choices=ESTADOS_INCIDENTE,
+        default='en_espera',
+        null=True,
+        blank=True,
+    )
 
     class Meta:
         db_table = 'incidente'

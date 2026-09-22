@@ -1,3 +1,9 @@
+import dataclasses
+
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from common.api.views import ListCreateView, RetrieveUpdateDestroyView
 from common.domain.services import CrudService
 
@@ -28,6 +34,27 @@ class IncidenteDetailView(RetrieveUpdateDestroyView):
     service_factory = lambda self: CrudService(repositories.IncidenteRepository())
     serializer_class = serializers.IncidenteSerializer
     entity_class = entities.Incidente
+
+
+class IncidenteEstadoUpdateView(APIView):
+    def patch(self, request, id):
+        servicio = CrudService(repositories.IncidenteRepository())
+        actual = servicio.obtener(id)
+        if actual is None:
+            return Response({'detail': 'Incidente no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = serializers.IncidenteEstadoUpdateSerializer(
+            actual,
+            data=request.data,
+            partial=True,
+        )
+        serializer.is_valid(raise_exception=True)
+
+        datos = dataclasses.asdict(actual)
+        datos.update(serializer.validated_data)
+        entidad_actualizada = entities.Incidente(**datos)
+        incidente = servicio.actualizar(id, entidad_actualizada)
+        return Response(serializers.IncidenteSerializer(incidente).data)
 
 
 class RutaListCreateView(ListCreateView):
