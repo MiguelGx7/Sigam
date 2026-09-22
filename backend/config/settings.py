@@ -23,13 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-^54yzdg35$r*60eoy%!wozn$s$%)b%_3bt7z@3&hz4)w)^v-lj'
+SECRET_KEY = config('SECRET_KEY', default='django-insecure-^54yzdg35$r*60eoy%!wozn$s$%)b%_3bt7z@3&hz4)w)^v-lj')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1,localhost', cast=lambda v: [h.strip() for h in v.split(',')])
 
 
 # Application definition
@@ -66,10 +65,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    'http://localhost:4200',
-    'http://127.0.0.1:4200',
-]
+CORS_ALLOWED_ORIGINS = config(
+    'CORS_ALLOWED_ORIGINS',
+    default='http://localhost:4200,http://127.0.0.1:4200',
+    cast=lambda v: [o.strip() for o in v.split(',')]
+)
 
 ROOT_URLCONF = 'config.urls'
 
