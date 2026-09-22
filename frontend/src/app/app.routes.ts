@@ -5,6 +5,7 @@ import { RecuperarPassword } from './componentes/recuperar-password/recuperar-pa
 import { Layout } from './componentes/layout/layout';
 import { Usuarios } from './componentes/usuarios/usuarios';
 import { Roles } from './componentes/roles/roles';
+import { Incidentes } from './componentes/incidentes/incidentes';
 import { authGuard } from './guards/auth-guard';
 
 export const routes: Routes = [
@@ -18,9 +19,10 @@ export const routes: Routes = [
     component: Layout,
     canActivate: [authGuard],
     children: [
-      { path: '', redirectTo: 'usuarios', pathMatch: 'full' },
+      { path: '', redirectTo: 'incidentes', pathMatch: 'full' },
       { path: 'usuarios', component: Usuarios },
       { path: 'roles', component: Roles },
+      { path: 'incidentes', component: Incidentes },
     ],
   },
   { path: '**', redirectTo: 'login' },

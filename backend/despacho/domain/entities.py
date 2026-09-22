@@ -24,6 +24,7 @@ class Incidente:
     tipo_id: Optional[int] = None
     prioridad_id: Optional[int] = None
     descripcion: Optional[str] = None
+    observaciones: Optional[str] = None
     fecha_hora: Optional[datetime.datetime] = None
     ubicacion: Optional[str] = None
     estado_incidente: Optional[str] = None
