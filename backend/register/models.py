@@ -2,6 +2,7 @@ from django.db import models
 
 class Usuario(models.Model):
     ROLES = [
+        ('Usuario', 'Usuario'),
         ('Personal', 'Personal'),
         ('Operador', 'Operador'),
         ('Administrador', 'Administrador'),
